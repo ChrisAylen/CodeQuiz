@@ -2,32 +2,78 @@
 var startQuiz = document.getElementById("start");
 var quizQuestions = document.getElementById("questions");
 var choices = document.getElementById("choices");
+var questionTimer = document.getElementById("time");
+var qAndABlock = document.getElementById("questions");
+var startBlock = document.getElementById("start-block");
+var questionTimeLeft = 10;
+var questionAnswered = false;
+var renderedAnswers = document.querySelectorAll("choices");
 //When we hit the start button we need to load the first question ans start question the timer
 
-function launchQuiz(){
-
+function launchQuiz() {
+    startQuestionTimer();
     for (let i = 0; i <= questions.length; i++) {
-        //Display the question
-        quizQuestions.setAttribute("class", "start");
-        quizQuestions.textContent=questions[i].title;
-        
-        //display the choices
-        for (let qChoices = 0; qChoices <= questions[i].qChoices; qChoices++) {
-            
+        questionAnswered = false
+        while (questionAnswered == false) {
+            //Display the question
+
+            quizQuestions.setAttribute("class", "start");
+            startBlock.setAttribute("class", "hide");
+
+            quizQuestions.textContent = questions[i].title;
+
+            var newOl = document.createElement("ol");
+            qAndABlock.appendChild(newOl);
+            //display the choices
+            for (let qChoices = 0; qChoices < questions[i].choices.length; qChoices++) {
+                var newLi = document.createElement("li");
+                var newButton = document.createElement("button");
+                newButton.setAttribute("class", "choices button")
+                newOl.appendChild(newLi);
+                newLi.appendChild(newButton);
+                newButton.textContent = questions[i].choices[qChoices];
+            }
+            questionAnswered = true;
         }
-        
-        //questions[i].
     }
 }
 
-function startQuestionTimer(){
+function processAnswer(){
+    console.log("button pressed");
+}
+function startQuestionTimer() {
 
+    var timeInterval = setInterval(aTimer, 1000);
+}
+
+function aTimer() {
+
+    if (questionTimeLeft >= 0) {
+
+        questionTimer.textContent = questionTimeLeft;
+
+        questionTimeLeft--;
+        // } else if (timeLeft === 1) {
+
+        //     questionTimer.textContent = timeLeft;
+        //     timeLeft--;
+        // } else {
+
+        //     timerEl.textContent = '';
+
+        //     clearInterval(timeInterval);
+    }
 }
 
 
 
 
-startQuiz.addEventListener("click",launchQuiz);
-//Timer1 - the time you have to complere the test
-//Timer2 - how long any messaging will appear on answergin a question (right or wrong)
+
+startQuiz.addEventListener("click", launchQuiz);
+
+//renderedAnswers.addEventListener("click",processAnswer);//.addEventListener("click",processAnswer);
+
+
+    //Timer1 - the time you have to complere the test
+    //Timer2 - how long any messaging will appear on answergin a question (right or wrong)
 
