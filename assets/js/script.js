@@ -38,8 +38,9 @@ function launchQuiz() {
     }
 }
 
-function processAnswer(){
+function processAnswer(event){
     console.log("button pressed");
+    console.log(event);
 }
 function startQuestionTimer() {
 
@@ -71,9 +72,18 @@ function aTimer() {
 
 startQuiz.addEventListener("click", launchQuiz);
 
-//renderedAnswers.addEventListener("click",processAnswer);//.addEventListener("click",processAnswer);
+//questions.addEventListener("click",processAnswer(event));//.addEventListener("click",processAnswer);
 
 
+questions.addEventListener('click', function (event) {
+    //event.preventDefault();
+    console.log(event);
+    console.log(questionAnswered.textContent);
+  
+    // for (var i = 0; i < elements.length; i++) {
+    //   elements[i].textContent = '';
+    // }
+  });
     //Timer1 - the time you have to complere the test
     //Timer2 - how long any messaging will appear on answergin a question (right or wrong)
 
