@@ -77,8 +77,8 @@ startQuiz.addEventListener("click", launchQuiz);
 
 questions.addEventListener('click', function (event) {
     //event.preventDefault();
-    console.log(event);
-    console.log(questionAnswered.textContent);
+    console.log(event.target.textContent);
+    //console.log(questionAnswered.textContent);
   
     // for (var i = 0; i < elements.length; i++) {
     //   elements[i].textContent = '';
