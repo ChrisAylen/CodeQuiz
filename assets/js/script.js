@@ -8,6 +8,17 @@ var startBlock = document.getElementById("start-block");
 var questionTimeLeft = 10;
 var questionAnswered = false;
 var renderedAnswers = document.querySelectorAll("choices");
+var selectedAnswer;
+var questionAnswerObj = {
+    userInitials: ""
+    [{
+            questionNo: 0,
+            answerGiven: "",
+            correctAnswer: false,
+
+        }]
+}
+
 //When we hit the start button we need to load the first question ans start question the timer
 
 function launchQuiz() {
@@ -38,9 +49,14 @@ function launchQuiz() {
     }
 }
 
-function processAnswer(event){
+function processAnswer(event) {
     console.log("button pressed");
-    console.log(event);
+    console.log(event.target.textContent);
+    selectedAnswer = event.target.textContent;
+    //persist the answer
+    //questionAnswerObj=
+
+    //console.log(event);
 }
 function startQuestionTimer() {
 
@@ -77,13 +93,18 @@ startQuiz.addEventListener("click", launchQuiz);
 
 questions.addEventListener('click', function (event) {
     //event.preventDefault();
-    console.log(event.target.textContent);
+    processAnswer(event);
+    //console.log(event.target.textContent);
+    //selectedAnswer=event.target.textContent;
+    //persist the answer
+
+
     //console.log(questionAnswered.textContent);
-  
+
     // for (var i = 0; i < elements.length; i++) {
     //   elements[i].textContent = '';
     // }
-  });
+});
     //Timer1 - the time you have to complere the test
     //Timer2 - how long any messaging will appear on answergin a question (right or wrong)
 
