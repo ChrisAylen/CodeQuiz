@@ -10,8 +10,8 @@ var questionAnswered = false;
 var renderedAnswers = document.querySelectorAll("choices");
 var selectedAnswer;
 var questionAnswerObj = {
-    userInitials: ""
-    [{
+    userInitials: "",
+    answerDetail=[{
             questionNo: 0,
             answerGiven: "",
             correctAnswer: false,
@@ -43,6 +43,9 @@ function launchQuiz() {
                 newOl.appendChild(newLi);
                 newLi.appendChild(newButton);
                 newButton.textContent = questions[i].choices[qChoices];
+                questionAnswerObj.answerDetail[i].questionNo=i;
+                questionAnswerObj.answerDetail[i].answerGiven=selectedAnswer;
+                console.log(questionAnswerObj);
             }
             questionAnswered = true;
         }
@@ -54,6 +57,8 @@ function processAnswer(event) {
     console.log(event.target.textContent);
     selectedAnswer = event.target.textContent;
     //persist the answer
+    var curentQuestion=questionAnswerObj.answerDetail.length();
+    questionAnswerObj.answerDetail[curentQuestion].a
     //questionAnswerObj=
 
     //console.log(event);
