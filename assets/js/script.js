@@ -11,7 +11,7 @@ var renderedAnswers = document.querySelectorAll("choices");
 var selectedAnswer;
 var questionAnswerObj = {
     userInitials: "",
-    answerDetail=[{
+    answerDetail : [{
             questionNo: 0,
             answerGiven: "",
             correctAnswer: false,
