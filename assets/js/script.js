@@ -5,7 +5,7 @@ var choices = document.getElementById("choices");
 var questionTimer = document.getElementById("time");
 var qAndABlock = document.getElementById("questions");
 var startBlock = document.getElementById("start-block");
-var questionTimeLeft = 10;
+var questionTimeLeft = 60;
 var questionAnswered = false;
 var questionDisplayed
 var renderedAnswers = document.querySelectorAll("choices");
@@ -19,29 +19,37 @@ var questionAnswerObj = {
 
     }]
 }
+var questionsCorrect = 0;
 var correctAnswer = "";
 var newOl = document.createElement("ul");
 var idx = 0;
+var timeInterval;
 
 //When we hit the start button we need to load the first question ans start question the timer
 
 function launchQuiz() {
     startQuestionTimer();
-    //OUTER loop foir quesitons
-    questionAnswered = false;
+    //OUTER loop for quesitons
+    quizComplete = false;
     questionDisplayed = false;
     
-    while (questionAnswered == false && questionDisplayed == false) {
-
-        //for (let i = 0; i <= questions.length; i++) {
-
-        while (questionDisplayed == false) {
+    while (quizComplete == false && questionDisplayed == false) {
+        //INNER loop for questions
+        //while (questionDisplayed == false) {
             //Display the question
+            if(idx<questions.length){
             displayQuestion(idx);
             displayChoices(idx);
             questionDisplayed = true;
-            idx++; //need to set the max number yet
-        }
+            //check that the number of questions is not exceeded
+                idx++;
+            }
+            else{
+                //end the quiz
+                endQuiz();
+            }
+                
+        //}
       }
 }
 
@@ -59,10 +67,6 @@ function displayQuestion(quesitonIndex) {
 
 function displayChoices(questionIndex) {
     //Clear out the node
-
-
-
-
     for (let qChoices = 0; qChoices < questions[questionIndex].choices.length; qChoices++) {
         var newLi = document.createElement("li");
         var newButton = document.createElement("button");
@@ -81,31 +85,43 @@ function processAnswer(event) {
         //Process a correct answer
         console.log("Answer Correct");
         answerGiven = true;
+        //Clear out the choices node
         const choicesNode = document.getElementById("choices");
 
         while (choicesNode.firstChild) {
             choicesNode.removeChild(choicesNode.lastChild);
         }
+        questionsCorrect++;
+        console.log(questionsCorrect);
         launchQuiz();
     }
     else {
         //process and incorrect answer
         console.log("Answer incorrect");
-        //display information
-        //reduce the current timer by 10 seconds
+        questionTimeLeft-=10;
         return;
     }
 
-    //persist the answer
-    var curentQuestion = questionAnswerObj.answerDetail.length;
-    questionAnswerObj.answerDetail[curentQuestion].a
-    //questionAnswerObj=
-
-    //console.log(event);
 }
+
+function endQuiz() {
+    quizComplete = true;
+    localStorage.setItem("questionTimeLeft", questionTimeLeft);
+    clearInterval(timeInterval);
+    quizQuestions.setAttribute("class", "hide");
+    choices.setAttribute("class", "hide");
+    questionTimer.setAttribute("class", "hide");
+    var userInitials=prompt("Please enter your initials");
+    localStorage.setItem("userInitials", userInitials);
+    localStorage.setItem;
+//persist the score
+}
+
+
+
 function startQuestionTimer() {
 
-    var timeInterval = setInterval(aTimer, 1000);
+    timeInterval = setInterval(aTimer, 1000);
 }
 
 function aTimer() {
