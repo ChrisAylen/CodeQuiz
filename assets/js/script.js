@@ -19,6 +19,7 @@ var questionAnswerObj = {
 
     }]
 }
+var userScores=[questionAnswerObj];
 var questionsCorrect = 0;
 var correctAnswer = "";
 var newOl = document.createElement("ul");
@@ -39,15 +40,12 @@ function launchQuiz() {
             displayQuestion(idx);
             displayChoices(idx);
             questionDisplayed = true;
-
             idx++;
         }
         else {
             //end the quiz
             endQuiz();
         }
-
-        //}
     }
 }
 
@@ -124,19 +122,15 @@ function endQuiz() {
     localStorage.setItem("userInitials", userInitials);
     localStorage.setItem;
     window.location.href = "highscores.html";
-
-    //persist the score
 }
 
 
 
 function startQuestionTimer() {
-
     timeInterval = setInterval(aTimer, 1000);
 }
 
 function aTimer() {
-
     if (questionTimeLeft >= 0) {
         questionTimer.textContent = questionTimeLeft;
         questionTimeLeft--;
