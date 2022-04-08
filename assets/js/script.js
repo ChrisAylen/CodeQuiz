@@ -7,48 +7,69 @@ var qAndABlock = document.getElementById("questions");
 var startBlock = document.getElementById("start-block");
 var questionTimeLeft = 10;
 var questionAnswered = false;
+var questionDisplayed
 var renderedAnswers = document.querySelectorAll("choices");
 var selectedAnswer;
 var questionAnswerObj = {
     userInitials: "",
-    answerDetail : [{
-            questionNo: 0,
-            answerGiven: "",
-            correctAnswer: false,
+    answerDetail: [{
+        questionNo: 0,
+        answerGiven: "",
+        correctAnswer: false,
 
-        }]
+    }]
 }
+var correctAnswer = "";
+var newOl = document.createElement("ul");
+var idx = 0;
 
 //When we hit the start button we need to load the first question ans start question the timer
 
 function launchQuiz() {
     startQuestionTimer();
-    for (let i = 0; i <= questions.length; i++) {
-        questionAnswered = false
-        while (questionAnswered == false) {
+    //OUTER loop foir quesitons
+    questionAnswered = false;
+    questionDisplayed = false;
+    
+    while (questionAnswered == false && questionDisplayed == false) {
+
+        //for (let i = 0; i <= questions.length; i++) {
+
+        while (questionDisplayed == false) {
             //Display the question
-
-            quizQuestions.setAttribute("class", "start");
-            startBlock.setAttribute("class", "hide");
-
-            quizQuestions.textContent = questions[i].title;
-
-            var newOl = document.createElement("ol");
-            qAndABlock.appendChild(newOl);
-            //display the choices
-            for (let qChoices = 0; qChoices < questions[i].choices.length; qChoices++) {
-                var newLi = document.createElement("li");
-                var newButton = document.createElement("button");
-                newButton.setAttribute("class", "choices button")
-                newOl.appendChild(newLi);
-                newLi.appendChild(newButton);
-                newButton.textContent = questions[i].choices[qChoices];
-                questionAnswerObj.answerDetail[i].questionNo=i;
-                questionAnswerObj.answerDetail[i].answerGiven=selectedAnswer;
-                console.log(questionAnswerObj);
-            }
-            questionAnswered = true;
+            displayQuestion(idx);
+            displayChoices(idx);
+            questionDisplayed = true;
+            idx++; //need to set the max number yet
         }
+      }
+}
+
+function displayQuestion(quesitonIndex) {
+    quizQuestions.setAttribute("class", "start");
+    startBlock.setAttribute("class", "hide");
+
+    quizQuestions.textContent = questions[quesitonIndex].title;
+    correctAnswer = questions[quesitonIndex].answer;
+
+    //var newOl = document.createElement("ol");
+    newOl.setAttribute("id", "choices");
+    qAndABlock.appendChild(newOl);
+}
+
+function displayChoices(questionIndex) {
+    //Clear out the node
+
+
+
+
+    for (let qChoices = 0; qChoices < questions[questionIndex].choices.length; qChoices++) {
+        var newLi = document.createElement("li");
+        var newButton = document.createElement("button");
+        newButton.setAttribute("class", "choices button")
+        newOl.appendChild(newLi);
+        newLi.appendChild(newButton);
+        newButton.textContent = questions[questionIndex].choices[qChoices];
     }
 }
 
@@ -56,8 +77,27 @@ function processAnswer(event) {
     console.log("button pressed");
     console.log(event.target.textContent);
     selectedAnswer = event.target.textContent;
+    if (selectedAnswer == correctAnswer) {
+        //Process a correct answer
+        console.log("Answer Correct");
+        answerGiven = true;
+        const choicesNode = document.getElementById("choices");
+
+        while (choicesNode.firstChild) {
+            choicesNode.removeChild(choicesNode.lastChild);
+        }
+        launchQuiz();
+    }
+    else {
+        //process and incorrect answer
+        console.log("Answer incorrect");
+        //display information
+        //reduce the current timer by 10 seconds
+        return;
+    }
+
     //persist the answer
-    var curentQuestion=questionAnswerObj.answerDetail.length();
+    var curentQuestion = questionAnswerObj.answerDetail.length;
     questionAnswerObj.answerDetail[curentQuestion].a
     //questionAnswerObj=
 
@@ -93,23 +133,11 @@ function aTimer() {
 
 startQuiz.addEventListener("click", launchQuiz);
 
-//questions.addEventListener("click",processAnswer(event));//.addEventListener("click",processAnswer);
-
-
 questions.addEventListener('click', function (event) {
     //event.preventDefault();
     processAnswer(event);
-    //console.log(event.target.textContent);
-    //selectedAnswer=event.target.textContent;
-    //persist the answer
+    return;
 
-
-    //console.log(questionAnswered.textContent);
-
-    // for (var i = 0; i < elements.length; i++) {
-    //   elements[i].textContent = '';
-    // }
 });
-    //Timer1 - the time you have to complere the test
-    //Timer2 - how long any messaging will appear on answergin a question (right or wrong)
+
 
