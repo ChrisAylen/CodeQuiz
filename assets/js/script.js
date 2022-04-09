@@ -7,15 +7,13 @@ var startBlock = document.getElementById("start-block");
 var feedback = document.getElementById("feedback");
 var endScreen = document.getElementById("end-screen");
 var submitScores = document.getElementById("submit");
-
+var timerStarted = false;
 var questionTimeLeft = 60;
 var timeLeftAtEnd;
-
 var questionAnswered = false;
 var questionDisplayed;
 var renderedAnswers = document.querySelectorAll("choices");
 var selectedAnswer;
-
 var userScore = {
   userInitials: "",
   userScore: 0,
@@ -26,13 +24,14 @@ var correctAnswer = "";
 var newOl = document.createElement("ul");
 var idx = 0;
 var timeInterval;
-
 var quizEndHasRun = false;
 
 
 function launchQuiz() {
-  startQuestionTimer();
-  //OUTER loop for quesitons
+  if (timerStarted === false) {
+    startQuestionTimer();
+    timerStarted = true;
+  }
   quizComplete = false;
   questionDisplayed = false;
 
@@ -52,11 +51,8 @@ function launchQuiz() {
 function displayQuestion(quesitonIndex) {
   quizQuestions.setAttribute("class", "start");
   startBlock.setAttribute("class", "hide");
-
   quizQuestions.textContent = questions[quesitonIndex].title;
   correctAnswer = questions[quesitonIndex].answer;
-
-  //var newOl = document.createElement("ol");
   newOl.setAttribute("id", "choices");
   qAndABlock.appendChild(newOl);
 }
@@ -78,12 +74,9 @@ function displayChoices(questionIndex) {
 }
 
 function processAnswer(event) {
-  console.log("button pressed");
-  console.log(event.target.textContent);
   selectedAnswer = event.target.textContent;
   if (selectedAnswer == correctAnswer) {
     //Process a correct answer
-    console.log("Answer Correct");
     answerGiven = true;
     //Clear out the choices node
     const choicesNode = document.getElementById("choices");
@@ -93,21 +86,17 @@ function processAnswer(event) {
     }
     questionsCorrect++;
     feedback.setAttribute("class", "hide");
-    console.log(questionsCorrect);
     launchQuiz();
+
   } else {
     //process and incorrect answer
     console.log("Answer incorrect");
     //reduce the timer by 10 seconds
     questionTimeLeft -= 10;
-
     feedback.setAttribute("class", "feedback");
     newP = document.createElement("p");
     feedback.appendChild(newP);
     feedback.textContent = "Wrong Answer";
-
-    //display the feedback by setting class set to start
-
     return;
   }
 }
@@ -162,10 +151,9 @@ function aTimer() {
   }
 }
 
-startQuiz.addEventListener("click", launchQuiz);
+startQuiz.addEventListener("click", launchQuiz); 
 
 questions.addEventListener("click", function (event) {
-  //event.preventDefault();
   processAnswer(event);
   return;
 });
