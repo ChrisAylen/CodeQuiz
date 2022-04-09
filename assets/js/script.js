@@ -6,8 +6,12 @@ var questionTimer = document.getElementById("time");
 var qAndABlock = document.getElementById("questions");
 var startBlock = document.getElementById("start-block");
 var feedback = document.getElementById("feedback");
+var endScreen = document.getElementById("end-screen");
+var submitScores = document.getElementById("submit");
 
 var questionTimeLeft = 60;
+var timeLeftAtEnd;
+
 var questionAnswered = false;
 var questionDisplayed
 var renderedAnswers = document.querySelectorAll("choices");
@@ -19,12 +23,18 @@ var questionAnswerObj = {
 
     }]
 }
-var userScores=[questionAnswerObj];
+var userScore = {
+    userInitials: "",
+    userScore: 0
+}
+var userScores = [];
 var questionsCorrect = 0;
 var correctAnswer = "";
 var newOl = document.createElement("ul");
 var idx = 0;
 var timeInterval;
+
+var quizEndHasRun = false;
 
 //When we hit the start button we need to load the first question ans start question the timer
 
@@ -97,8 +107,7 @@ function processAnswer(event) {
         console.log("Answer incorrect");
         //reduce the timer by 10 seconds
         questionTimeLeft -= 10;
-        //display a message with wrong answer
-        //start a timer for the feedback display
+
         feedback.setAttribute("class", "feedback");
         newP = document.createElement("p");
         feedback.appendChild(newP);
@@ -112,16 +121,33 @@ function processAnswer(event) {
 }
 
 function endQuiz() {
-    quizComplete = true;
-    localStorage.setItem("questionTimeLeft", questionTimeLeft);
+    quizEndHasRun = true;
+    timeLeftAtEnd = questionTimeLeft;
+    questionTimeLeft = 0;
+
     clearInterval(timeInterval);
+    quizComplete = true;
     quizQuestions.setAttribute("class", "hide");
     choices.setAttribute("class", "hide");
-    questionTimer.setAttribute("class", "hide");
-    var userInitials = prompt("Please enter your initials");
-    localStorage.setItem("userInitials", userInitials);
-    localStorage.setItem;
+    endScreen.setAttribute("class", "start");
+    document.getElementById("final-score").textContent = timeLeftAtEnd;
+    //Check for pre-existing scores
+    if (localStorage.getItem("scores") != null) {
+        userScores = JSON.parse(localStorage.getItem("scores"));
+    }
+}
+
+function populateData() {
+    var userInitials = document.getElementById("initials").value;
+    userScore.userInitials = userInitials;
+    userScore.userScore = timeLeftAtEnd;
+    userScores.push(userScore);
+
+    endScreen.textContent = "Your score is " + timeLeftAtEnd;
+
+    localStorage.setItem("scores", JSON.stringify(userScores));
     window.location.href = "highscores.html";
+
 }
 
 
@@ -136,7 +162,17 @@ function aTimer() {
         questionTimeLeft--;
     }
     else {
-        endQuiz();
+        if (quizEndHasRun == false) {
+
+            clearInterval(timeInterval);
+            questionTimeLeft = 0;
+            //timeLeftAtEnd=0;
+            feedback.setAttribute("class", "feedback");
+            newP = document.createElement("p");
+            feedback.appendChild(newP);
+            feedback.textContent = "You ran out of time!";
+            endQuiz();
+        }
     }
 }
 
@@ -147,6 +183,11 @@ questions.addEventListener('click', function (event) {
     processAnswer(event);
     return;
 
+});
+
+submitScores.addEventListener("click", function (event) {
+    clearInterval(timeInterval);
+    populateData();
 });
 
 
